@@ -30,6 +30,11 @@ public class GroqLlmServiceImpl implements LlmService{
 			    	
 			    	HttpResponse<String> response = getContent(prompt);
 			    	
+			    	if (response == null) {
+			    	    System.out.println("Groq returned empty response");
+			    	    return null;
+			    	}
+			    	
 			    	JsonNode root = objectMapper.readTree(response.body());
 
 			        return root.path("choices").get(0).path("message").path("content").asText();

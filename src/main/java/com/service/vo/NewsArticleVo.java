@@ -2,14 +2,13 @@ package com.service.vo;
 
 import java.time.LocalDateTime;
 
-import com.service.entity.Article;
-
 public class NewsArticleVo {
 	
 	private int id;
     private String title;
     private String content;
-    private Article article;
+    private String originalTitle;
+    private String originalContent;
     private String imageUrl;
     private String language;
     private String location;
@@ -44,12 +43,20 @@ public class NewsArticleVo {
 		this.content = content;
 	}
 
-	public Article getArticle() {
-		return article;
+	public String getOriginalTitle() {
+		return originalTitle;
 	}
 
-	public void setArticle(Article article) {
-		this.article = article;
+	public void setOriginalTitle(String originalTitle) {
+		this.originalTitle = originalTitle;
+	}
+
+	public String getOriginalContent() {
+		return originalContent;
+	}
+
+	public void setOriginalContent(String originalContent) {
+		this.originalContent = originalContent;
 	}
 
 	public String getImageUrl() {

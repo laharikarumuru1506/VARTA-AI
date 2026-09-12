@@ -105,30 +105,33 @@ public class RSSNewsProvider implements NewsProvider{
 		
 		newsItem.setUrl(entry.getLink());
 		newsItem.setPublishedAt(entry.getPublishedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		newsItem.setCategoryCode("OTH"); // default value
+		newsItem.setLocation("OTH"); // default value
 		
 		EnrichedNews enrichedNews = newsEnrichmentService.enrich(newsItem);
 		
-		List<CodeValue> categoryTypeList = codeValueRepository.findByDomain("CATEGORY_TYPE");
-		
-		CodeValue category = categoryTypeList.stream()
-										.filter(x -> enrichedNews.getCategory().equalsIgnoreCase(x.getValue()))
-										.findFirst()
-								        .orElse(null);
-		
-		newsItem.setCategoryCode(category.getCode());
-		
-		if(enrichedNews.getLocation() != null) {
-			List<CodeValue> locationList = codeValueRepository.findByDomain("GEO_LOCATION");
+		if(enrichedNews != null) {
 			
-			CodeValue location = locationList.stream()
-											.filter(x -> enrichedNews.getLocation().equalsIgnoreCase(x.getValue()))
+			List<CodeValue> categoryTypeList = codeValueRepository.findByDomain("CATEGORY_TYPE");
+			
+			CodeValue category = categoryTypeList.stream()
+											.filter(x -> enrichedNews.getCategory().equalsIgnoreCase(x.getValue()))
 											.findFirst()
 									        .orElse(null);
 			
-			newsItem.setLocation(location != null ? location.getCode() : "OTH");
-		} else {
-			newsItem.setLocation("OTH");
-		}
+			newsItem.setCategoryCode(category.getCode());
+			
+			if(enrichedNews.getLocation() != null) {
+				List<CodeValue> locationList = codeValueRepository.findByDomain("GEO_LOCATION");
+				
+				CodeValue location = locationList.stream()
+												.filter(x -> enrichedNews.getLocation().equalsIgnoreCase(x.getValue()))
+												.findFirst()
+										        .orElse(null);
+				
+				newsItem.setLocation(location != null ? location.getCode() : "OTH");
+			} 
+		} 
 		
         return newsItem;
     }
