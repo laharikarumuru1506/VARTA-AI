@@ -25,11 +25,29 @@ public class GroqLlmServiceImpl implements LlmService{
 		
 		try {
 			
-			HttpResponse<String> response = getContent(prompt);
-			
-			JsonNode root = objectMapper.readTree(response.body());
+			for (int attempt = 1; attempt <= 3; attempt++) {
+			    try {
+			    	
+			    	HttpResponse<String> response = getContent(prompt);
+			    	
+			    	JsonNode root = objectMapper.readTree(response.body());
 
-	        return root.path("choices").get(0).path("message").path("content").asText();
+			        return root.path("choices").get(0).path("message").path("content").asText();
+
+			    } catch (RuntimeException e) {
+
+			        if (e.getMessage().contains("429")) {
+			            try {
+			                Thread.sleep(5000);
+			            } catch (InterruptedException ex) {
+			                Thread.currentThread().interrupt();
+			            }
+			        } else {
+			            throw e;
+			        }
+			    }
+			}
+			throw new RuntimeException("Groq API failed after retries");
 	        
 		} catch(Exception e) {
 			throw new NewsProviderException("Failed to generate content", e);
