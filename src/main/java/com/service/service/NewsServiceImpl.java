@@ -61,6 +61,7 @@ public class NewsServiceImpl implements NewsService{
 	    response.setId(article.getId());
 	    response.setTitle(article.getTitle());
 	    response.setContent(article.getSummary());
+	    response.setArticle(article);
 	    response.setImageUrl(article.getImageUrl());
 	    response.setLanguage(article.getLanguage());
 	    response.setLocation(article.getLocation());

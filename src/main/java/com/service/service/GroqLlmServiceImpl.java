@@ -38,7 +38,7 @@ public class GroqLlmServiceImpl implements LlmService{
 
 			        if (e.getMessage().contains("429")) {
 			            try {
-			                Thread.sleep(5000);
+			            	Thread.sleep(10000);
 			            } catch (InterruptedException ex) {
 			                Thread.currentThread().interrupt();
 			            }

@@ -32,8 +32,7 @@ public class NewsEnrichmentServiceImpl implements NewsEnrichmentService{
 		try {
 			enrichedNews = objectMapper.readValue(response, EnrichedNews.class);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("LLM returned invalid JSON", e);
 		}
 
 		return enrichedNews;
@@ -154,6 +153,22 @@ public class NewsEnrichmentServiceImpl implements NewsEnrichmentService{
 				Do not include ```json.
 				Do not include explanations.
 				Do not include additional fields.
+				
+				Return ONLY valid JSON.
+
+				Do not use markdown.
+				Do not add ```json.
+				Do not add explanations.
+				Ensure every string is properly enclosed in double quotes.
+				Escape any double quotes inside string values.
+				
+				Use exactly this JSON structure:
+				{
+				  "summary": "string",
+				  "category": "string",
+				  "location": "string",
+				  "keywords": ["string"]
+				}
 				
 				Title:%s
 				Content:%s	

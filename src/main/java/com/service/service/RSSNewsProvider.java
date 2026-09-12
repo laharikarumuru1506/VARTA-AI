@@ -52,7 +52,7 @@ public class RSSNewsProvider implements NewsProvider{
 
 	            SyndFeed feed = new SyndFeedInput().build(reader);
 	
-	            return feed.getEntries().stream().limit(15)
+	            return feed.getEntries().stream().limit(10)
 				            		.filter(entry -> (articleRepository.findByOriginalUrl(entry.getLink()) == null))
 				            		.map(this::toNewsItem).filter(Objects::nonNull)
 				            		.toList();
