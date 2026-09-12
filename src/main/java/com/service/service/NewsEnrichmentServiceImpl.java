@@ -53,27 +53,49 @@ public class NewsEnrichmentServiceImpl implements NewsEnrichmentService{
 				4. Extract important keywords.
 				
 				LOCATION RULES:
+
+				Find the location where the MAIN NEWS EVENT actually happened.
 				
-				- The location must represent WHERE THE MAIN NEWS EVENT OCCURRED.
-				- Look carefully for city, town, village, locality, suburb, mandal, district, or other geographic references in both the title and content.
-				- If a specific locality, suburb, village, mandal, or small town is mentioned, identify its nearest well-known/popular city in India when the relationship is reliably known.
-				- Return ONLY the city name.
-				- Do NOT return the state or country.
-				- Examples:
-				  - "Kukatpally" → "Hyderabad"
-				  - "Madhapur" → "Hyderabad"
-				  - "Gachibowli" → "Hyderabad"
-				  - "Banjara Hills" → "Hyderabad"
-				  - "Whitefield" → "Bengaluru"
-				  - "Andheri" → "Mumbai"
-				- If the article directly mentions a major city, return that city.
-				- If multiple locations are mentioned, return the location where the main event happened, not locations mentioned only for background or comparison.
-				- Do NOT use the news source's location as the article location.
-				- Do NOT assume Hyderabad merely because the article is from a Telugu news source.
-				- Do NOT infer a city from the user's location.
-				- For state-level news, return a major city only when the article clearly associates the event with that city.
-				- If the primary event location cannot be determined reliably from the article, return null.
-				- Never invent a location.
+				Follow this process before deciding the final city:
+				
+				1. Find the ORIGINAL LOCATION from the title and content.
+				   Look for city, town, village, locality, suburb, mandal, district,
+				   landmark, temple, hospital, etc.
+				
+				2. Resolve its geographic hierarchy:
+				   Original location → Town/City → District → State → India.
+				
+				3. Verify which state the original location belongs to before selecting
+				   the final city.
+				
+				4. Return the geographically appropriate CITY representing the event.
+				   If the original place is a small locality/village/mandal, map it to its
+				   actual nearby or administrative city only when the relationship is
+				   reliably known.
+				
+				5. If multiple locations are mentioned, choose ONLY the location where
+				   the main event occurred.
+				
+				6. NEVER use:
+				   - News source/publisher location
+				   - User's location
+				   - Article language
+				   - State capital by default
+				   - Most famous city in the state without geographic evidence
+				
+				Example:
+				"News from Alipiri, Tirupati" 
+				→ Alipiri → Tirupati → Andhra Pradesh
+				→ "Tirupati"
+				
+				"Kukatpally incident"
+				→ Kukatpally → Hyderabad → Telangana
+				→ "Hyderabad"
+				
+				If the event location cannot be reliably determined, return null.
+				
+				Return ONLY the city name.
+				Do not return state, country, district, explanation, or multiple locations.
 				
 				CATEGORY RULES:
 				

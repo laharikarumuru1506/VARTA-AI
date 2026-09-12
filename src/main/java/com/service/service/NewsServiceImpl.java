@@ -92,6 +92,9 @@ public class NewsServiceImpl implements NewsService{
 	}
 	
 	public NewsArticleVo getArticleById(String articleId) {
-		return toResponse(articleRepository.findById(articleId));
+		
+		List<NewsArticleVo> newsArticles = setTranslationArticles(List.of(articleRepository.findById(articleId)));
+		
+		return newsArticles.get(0);
 	}
 }

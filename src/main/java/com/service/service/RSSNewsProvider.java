@@ -52,7 +52,7 @@ public class RSSNewsProvider implements NewsProvider{
 
 	            SyndFeed feed = new SyndFeedInput().build(reader);
 	
-	            return feed.getEntries().stream().limit(2)
+	            return feed.getEntries().stream().limit(15)
 				            		.filter(entry -> (articleRepository.findByOriginalUrl(entry.getLink()) == null))
 				            		.map(this::toNewsItem).filter(Objects::nonNull)
 				            		.toList();
@@ -125,7 +125,7 @@ public class RSSNewsProvider implements NewsProvider{
 											.findFirst()
 									        .orElse(null);
 			
-			newsItem.setLocation(location.getCode());
+			newsItem.setLocation(location != null ? location.getCode() : "OTH");
 		} else {
 			newsItem.setLocation("OTH");
 		}
